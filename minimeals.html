@@ -268,9 +268,9 @@ button{
             <div class="navbar2">
                 <img src="img.jpg" alt="omino" id="image">
             </div>
-            <div class="searchbar">
+     <div class="searchbar">
                 <i class="fa-solid fa-location-dot"></i>
-                <input placeholder="enter delivery address">
+                <input placeholder="Enter delivery address" onclick="showUnderDevelopment()" readonly>
             </div>
             <div class="menu">
                 <div class="deal">
@@ -427,6 +427,10 @@ button{
                 popup.style.display = 'none';
             }, 3000);
         }
+                function showUnderDevelopment() {
+    window.location.href = "under.html";
+}
+
     </script>
 </body>
 </html>
