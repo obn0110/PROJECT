@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #fdd835);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        #cart-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #444;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        #item-count {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        #cart {
+            margin-bottom: 20px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #fafafa, #f2f2f2);
+        }
+
+        .item span {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .item button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .item button:hover {
+            background: #fa5252;
+        }
+
+        #action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        #clearCartButton,
+        #placeOrderButton {
+            background: linear-gradient(135deg, #42a5f5, #478ed1);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        #clearCartButton:hover,
+        #placeOrderButton:hover {
+            background: linear-gradient(135deg, #2979ff, #1e63d1);
+        }
+
+        /* Popup Styling */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+
+        .popup h3 {
+            margin-bottom: 15px;
+            color: #4caf50;
+            font-size: 20px;
+        }
+
+        .popup button {
+            padding: 10px 20px;
+            background: #42a5f5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .popup button:hover {
+            background: #2979ff;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div id="cart-container">
+        <h1>Your Shopping Cart</h1>
+        <div id="item-count"></div>
+        <div id="cart"></div>
+        <div id="action-buttons">
+            <button id="placeOrderButton" onclick="showPlaceOrderPopup()">Place Order</button>
+            <button id="clearCartButton" onclick="showClearCartPopup()">Clear Cart</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Clear Cart Popup -->
+    <div class="popup" id="clearCartPopup">
+        <h3>Clear Cart</h3>
+        <p>Are you sure you want to clear your cart?</p>
+        <button onclick="clearCart()">Yes, Clear</button>
+        <button onclick="closePopup()">Cancel</button>
+    </div>
+
+    <!-- Place Order Popup -->
+    <div class="popup" id="placeOrderPopup">
+        <h3>Order Placed</h3>
+        <p>Your order has been placed successfully!</p>
+        <button onclick="redirectToPayment()">Proceed to Payment</button>
+    </div>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        function updateItemCount() {
+            const itemCountElement = document.getElementById('item-count');
+            itemCountElement.innerText = `Items in Cart: ${cart.length}`;
+        }
+
+        function displayCart() {
+            let cartContainer = document.getElementById('cart');
+            cartContainer.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartContainer.innerHTML = "<p>Your Cart is Empty</p>";
+                updateItemCount();
+                return;
+            }
+
+            let total = 0;
+            cart.forEach((item, index) => {
+                let itemElement = document.createElement('div');
+                itemElement.classList.add('item');
+                itemElement.innerHTML = `
+                    <span>${item.name} - Rs.${item.price}</span>
+                    <button onclick="removeItem(${index})">Remove</button>
+                `;
+                cartContainer.appendChild(itemElement);
+                total += item.price;
+            });
+
+            let totalElement = document.createElement('div');
+            totalElement.innerText = `Total: Rs.${total.toFixed(2)}`;
+            cartContainer.appendChild(totalElement);
+
+            updateItemCount();
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
+
+        function clearCart() {
+            cart = [];
+            localStorage.removeItem('cart');
+            closePopup();
+            displayCart();
+        }
+
+        function showClearCartPopup() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('clearCartPopup').style.display = 'block';
+        }
+
+        function showPlaceOrderPopup() {
+            if (cart.length === 0) {
+                alert('Please add items to your cart before placing an order.');
+            } else {
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('placeOrderPopup').style.display = 'block';
+            }
+        }
+
+        function closePopup() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('clearCartPopup').style.display = 'none';
+            document.getElementById('placeOrderPopup').style.display = 'none';
+        }
+
+        function redirectToPayment() {
+            window.location.href = 'payment.html';
+        }
+
+        displayCart();
+    </script>
+</body>
+</html>

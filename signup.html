@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Page</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background: radial-gradient(circle at top left, #f07586, #f79618);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        /* Sign-Up Container */
+        .signup-container {
+            background: #ffffff;
+            padding: 30px 20px;
+            width: 350px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .signup-container h2 {
+            margin-bottom: 20px;
+            color: #f5576c;
+            text-align: center;
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #f5576c;
+            box-shadow: 0 0 5px rgba(245, 87, 108, 0.5);
+        }
+
+        /* Error Message */
+        .error-message {
+            color: #d9534f;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* Button Styling */
+        .signup-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #f5576c, #f093fb);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .signup-btn:hover {
+            background: linear-gradient(135deg, #f93e5c, #f5576c);
+        }
+
+        /* Popup Styling */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+
+        .popup h3 {
+            margin-bottom: 15px;
+            color: #4caf50;
+            font-size: 20px;
+        }
+
+        .popup button {
+            padding: 10px 20px;
+            background: #f5576c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .popup button:hover {
+            background: #f93e5c;
+        }
+
+        /* Background overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 400px) {
+            .signup-container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .signup-container h2 {
+                font-size: 20px;
+            }
+
+            .signup-btn {
+                font-size: 14px;
+            }
+
+            .popup {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h2>Sign Up</h2>
+        <div id="error-message" class="error-message"></div>
+        <form id="signup-form">
+            <div class="form-group">
+                <label for="username">User Name</label>
+                <input maxlength="5" type="text" id="username" name="username" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="signup-btn">Sign Up</button>
+        </form>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="popup" id="popup">
+        <h3>Sign-up Successful!</h3>
+        <p>Welcome to our platform!</p>
+        <button id="close-popup">Go to Dashboard</button>
+    </div>
+
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Fetch input values
+            const username = document.getElementById('username').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMessage = document.getElementById('error-message');
+            const popup = document.getElementById('popup');
+            const overlay = document.getElementById('overlay');
+
+            errorMessage.textContent = ''; // Clear any previous error messages
+
+            // Form validation
+            if (!username || !phone || !email || !password) {
+                errorMessage.textContent = 'All fields are required.';
+                return;
+            }
+
+            if (!/^[0-9]{10}$/.test(phone)) {
+                errorMessage.textContent = 'Phone number must be 10 digits.';
+                return;
+            }
+
+            if (password.length < 6) {
+                errorMessage.textContent = 'Password must be at least 6 characters long.';
+                return;
+            }
+
+            // Save data in localStorage
+            localStorage.setItem('username', username);
+            localStorage.setItem('phone', phone);
+            localStorage.setItem('email', email);
+
+            // Show popup
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+
+            // Close popup
+            document.getElementById('close-popup').addEventListener('click', function() {
+                popup.style.display = 'none';
+                overlay.style.display = 'none';
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>

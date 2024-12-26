@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ff7f50, #ff4500);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Card container */
+        .card {
+            background-color: #ffffff;
+            color: #333333;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Headline */
+        .card h1 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #ff4500;
+        }
+
+        /* User information */
+        .card p {
+            font-size: 1.1rem;
+            margin: 10px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        /* Button styling */
+        button {
+            background: linear-gradient(90deg, #ff7f50, #ff4500);
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #ff6347, #ff2e00);
+        }
+
+        /* Footer message */
+        footer {
+            margin-top: 20px;
+            color: #f0f0f0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Welcome Back!</h1>
+        <p id="p1">Username: <span></span></p>
+        <p id="p2">Email: <span></span></p>
+        <p id="p3">Phone: <span></span></p>
+        <button id="signOutButton">Sign Out</button>
+    </div>
+    <footer>
+        &copy; 2024 Your Website | All rights reserved.
+    </footer>
+    <script>
+        let userData = {};
+
+        // Get user input
+        const username = localStorage.getItem('username');
+        const email = localStorage.getItem('email');
+        const phone = localStorage.getItem('phone');
+
+        // Save to a variable
+        userData = { username, email , phone };
+
+        // Display data
+        document.querySelector('#p1').innerHTML = `Username: ${userData.username || 'N/A'}`;
+        document.querySelector('#p2').innerHTML = `Email: ${userData.email || 'N/A'}`;
+        document.querySelector('#p3').innerHTML = `Phone: ${userData.phone || 'N/A'}`;
+        
+        // Sign-out functionality
+        document.getElementById('signOutButton').addEventListener('click', function () {
+            // Clear localStorage
+            localStorage.clear();
+
+            // Clear displayed data on the page
+            document.querySelector('#p1').innerHTML = '';
+            document.querySelector('#p2').innerHTML = '';
+            document.querySelector('#p3').innerHTML = '';
+
+            // Optionally redirect to another page after sign-out
+            window.location.href = 'signup.html';
+        });
+    </script>
+</body>
+</html>
