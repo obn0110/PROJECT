@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Payment</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #42a5f5, #86c5f7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #payment-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        h1 {
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        #totalAmount {
+            font-size: 18px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        img {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #42a5f5, #478ed1);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #2979ff, #1e63d1);
+        }
+    </style>
+</head>
+<body>
+    <div id="payment-container">
+        <h1>Scan QR to Pay</h1>
+        <div id="totalAmount">Total Amount: Rs.<span id="amount"></span></div>
+        <img src="https://via.placeholder.com/200" alt="QR Code">
+        <button onclick="confirmPayment()">Payment Done</button>
+    </div>
+
+    <script>
+        // Fetch payment amount from localStorage
+        const totalAmount = localStorage.getItem("paymentAmount");
+        document.getElementById('amount').innerText = totalAmount;
+
+        function confirmPayment() {
+            alert('Payment successful! Thank you for your order.');
+            window.location.href = 'index.html'; // Redirect to home or order summary page
+        }
+    </script>
+</body>
+</html>
