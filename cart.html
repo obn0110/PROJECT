@@ -256,6 +256,21 @@
         }
 
         displayCart();
+        
+        function showPlaceOrderPopup() {
+    if (cart.length === 0) {
+        alert('Please add items to your cart before placing an order.');
+    } else {
+        // Save the total amount to localStorage
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        localStorage.setItem('totalAmount', total.toFixed(2)); // Store as a string
+        
+        // Show the Place Order popup
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('placeOrderPopup').style.display = 'block';
+    }
+}
+
     </script>
 </body>
 </html>
